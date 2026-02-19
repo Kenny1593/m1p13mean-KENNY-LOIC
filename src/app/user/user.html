@@ -1,0 +1,134 @@
+<div class="container mt-5">
+
+  <!-- Titre -->
+  <div class="row mb-4">
+    <div class="col text-center">
+      <h2 class="fw-bold">Gestion des utilisateurs</h2>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      Ajouter un utilisateur
+    </div>
+
+    <div class="card-body">
+      <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+        <div class="mb-3">
+          <label class="form-label">ID</label>
+          <input 
+            type="number" 
+            class="form-control"
+            [(ngModel)]="_id"
+            name="_id"
+            required>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nom</label>
+            <input 
+              type="text" 
+              class="form-control"
+              [(ngModel)]="nom"
+              name="nom"
+              required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Email</label>
+            <input 
+              type="email" 
+              class="form-control"
+              [(ngModel)]="email"
+              name="email"
+              required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Mot de passe</label>
+            <input 
+              type="password" 
+              class="form-control"
+              [(ngModel)]="motDePasse"
+              name="motDePasse"
+              required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label  ">Rôle</label>
+              <select              
+                class="form-select"
+                [(ngModel)]="role"
+                name="role"
+                required>
+                <option value="" disabled selected>Choisir un rôle</option>
+                <option value="admin">Admin</option>
+                <option value="boutique">Boutique</option>
+                <option value="client">Client</option>
+                </select>
+                </div>  
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Boutique</label>
+                    <select
+                    class="form-select"
+                    [(ngModel)]="boutiqueId"
+                    name="boutiqueId"
+                    required>
+                    <option value="" disabled selected>Choisir une boutique</option>
+                    <!--<option *ngFor="let boutique of boutiques" [value]="boutique.id">{{ boutique.name }}</option>-->
+                    <option value="1">Boutique 1</option>
+                    <option value="2">Boutique 2</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Téléphone</label>
+                    <input 
+                    type="tel" 
+                    class="form-control"
+                    [(ngModel)]="telephone"
+                    name="telephone"
+                    required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Adresse</label>
+                    <input 
+                    type="text" 
+                    class="form-control"
+                    [(ngModel)]="adresse"
+                    name="adresse"
+                    required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Actif</label>
+                    <select
+                    class="form-select"
+                    [(ngModel)]="actif"
+                    name="actif"
+                    required>
+                    <option value="" disabled selected>Choisir un état</option>
+                    <option value="true">Oui</option>
+                    <option value="false">Non</option>
+                    </select>
+                </div>
+        </div>
+
+        <div class="text-end">
+          <button 
+            class="btn btn-success"
+            type="submit"
+            (click)="onSubmit()">
+            Ajouter
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
