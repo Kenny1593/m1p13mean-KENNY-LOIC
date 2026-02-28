@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth'; 
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,11 +13,9 @@ export class Login {
   email: string = '';
   motDePasse: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
-    console.log('Email:', this.email);
-    console.log('Password:', this.motDePasse);
 
     const data = {
       email: this.email,
@@ -26,6 +25,7 @@ export class Login {
     this.authService.login(data).subscribe({
       next: (response) => {
         console.log("Succès :", response);
+        this.router.navigate(['/categories']);
       },
       error: (error) => {
         console.error("Erreur :", error);
