@@ -1,4 +1,54 @@
 <app-navbar></app-navbar>
+<div class="container mt-4">
+  <div class="card shadow p-4">
+    <h3 class="mb-4">Ajout Produit</h3>
+
+    <form (ngSubmit)="onSubmit()">
+
+      <!-- Nom -->
+      <div class="mb-3">
+        <label class="form-label">Nom</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="categorie.nom"
+          name="nom"
+          required>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea 
+          class="form-control"
+          [(ngModel)]="categorie.description"
+          name="description"
+          rows="3"
+          required>
+        </textarea>
+      </div>
+
+      <!-- Image -->
+      <div class="mb-3">
+        <label class="form-label">Image (URL)</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="categorie.image"
+          name="image"
+          required>
+      </div>
+
+
+
+      <button type="submit" class="btn btn-primary w-100">
+        Enregistrer
+      </button>
+
+    </form>
+  </div>
+</div>
+
   <!-- Zone dynamique -->
     <div class="flex-fill p-4 bg-light">
       <router-outlet></router-outlet>
