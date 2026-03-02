@@ -35,7 +35,6 @@ export class Categories {
 
     const reader = new FileReader();
 
-    // Preview
     reader.onload = () => {
       this.imagePreview = reader.result;
       this.imageBase64= reader.result as string;
