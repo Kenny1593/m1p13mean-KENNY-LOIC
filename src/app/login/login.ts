@@ -25,6 +25,7 @@ export class Login {
     this.authService.login(data).subscribe({
       next: (response) => {
         console.log("Succès :", response);
+        alert('Connexion réussie !');
         this.router.navigate(['/categories']);
       },
       error: (error) => {
