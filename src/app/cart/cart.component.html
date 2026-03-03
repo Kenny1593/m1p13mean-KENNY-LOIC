@@ -1,24 +1,25 @@
 <div class="container py-5">
   <h2 class="mb-4">🛒 Mon Panier</h2>
+
   <ng-container *ngIf="cart$ | async as items">
-    <!-- Panier vide -->
-    <div *ngIf="items.length === 0" class="text-center py-5">
+
+    <!-- ═══ PANIER VIDE ═══ -->
+    <div *ngIf="items.length === 0 && !orderSuccess" class="text-center py-5">
       <i class="bi bi-cart-x fs-1 text-muted"></i>
       <p class="mt-3 text-muted">Votre panier est vide</p>
       <a routerLink="/shop" class="btn btn-primary mt-2">Continuer mes achats</a>
     </div>
-    <!-- Liste des articles -->
-    <div *ngIf="items.length > 0">
+
+    <!-- ═══ CONTENU PANIER ═══ -->
+    <div *ngIf="items.length > 0 && !orderSuccess">
+
       <div *ngFor="let item of items" class="card mb-3 shadow-sm">
         <div class="card-body d-flex align-items-center gap-3">
           <img [src]="item.product.image" alt="{{ item.product.nom }}"
                style="width:80px; height:80px; object-fit:cover;" class="rounded">
-
           <div class="flex-grow-1">
             <h6 class="mb-1 fw-bold">{{ item.product.nom }}</h6>
             <small class="text-muted">{{ item.product.boutiqueNom }}</small>
-
-            <!-- ✅ INFOS REMISE -->
             <div *ngIf="item.product.enPromotion || item.product.remise > 0" class="mt-1">
               <span class="badge bg-danger me-1">
                 -{{ item.product.pourcentagePromo || item.product.remise }}%
@@ -32,14 +33,12 @@
             </div>
           </div>
 
-          <!-- Quantité -->
           <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary btn-sm" (click)="updateQty(item, -1)">−</button>
             <span class="fw-bold px-2">{{ item.quantity }}</span>
             <button class="btn btn-outline-secondary btn-sm" (click)="updateQty(item, +1)">+</button>
           </div>
 
-          <!-- Prix ligne -->
           <div style="min-width:100px; text-align:right">
             <div class="text-primary fw-bold">
               {{ (item.product.prixFinal * item.quantity) | number:'1.2-2' }} €
@@ -49,23 +48,40 @@
             </small>
           </div>
 
-          <!-- Supprimer -->
           <button class="btn btn-outline-danger btn-sm" (click)="remove(item.product.id)">
             <i class="bi bi-trash"></i>
           </button>
         </div>
       </div>
 
-      <!-- ✅ RÉCAPITULATIF ÉCONOMIES + TOTAL -->
-      <div class="card shadow-sm mt-4">
+      <!-- Adresse -->
+      <div class="card shadow-sm mt-3">
+        <div class="card-body">
+          <label class="form-label fw-bold">
+            <i class="bi bi-geo-alt me-1"></i> Adresse de livraison
+          </label>
+          <textarea class="form-control" [(ngModel)]="shippingAddress"
+                    rows="2" placeholder="Ex: 12 rue des Fleurs, 75001 Paris"
+                    [disabled]="isOrdering">
+          </textarea>
+        </div>
+      </div>
+
+      <!-- Erreur -->
+      <div *ngIf="orderError" class="alert alert-danger mt-3">
+        <i class="bi bi-exclamation-triangle me-1"></i> {{ orderError }}
+      </div>
+
+      <!-- Total + actions -->
+      <div class="card shadow-sm mt-3">
         <div class="card-body">
           <div class="d-flex justify-content-between text-muted mb-1">
             <span>Sous-total (prix original)</span>
             <span>{{ cartService.getOriginalTotal() | number:'1.2-2' }} €</span>
           </div>
-          <div class="d-flex justify-content-between text-success mb-2"
-               *ngIf="cartService.getTotalSavings() > 0">
-            <span> Économies totales</span>
+          <div *ngIf="cartService.getTotalSavings() > 0"
+               class="d-flex justify-content-between text-success mb-2">
+            <span>🎉 Économies totales</span>
             <span>- {{ cartService.getTotalSavings() | number:'1.2-2' }} €</span>
           </div>
           <hr>
@@ -77,13 +93,120 @@
               </span>
             </div>
             <div class="d-flex gap-2">
-              <button class="btn btn-outline-danger" (click)="clear()">Vider le panier</button>
-              <button class="btn btn-success">Valider la commande</button>
+              <button class="btn btn-outline-danger" (click)="clear()" [disabled]="isOrdering">
+                Vider le panier
+              </button>
+              <button class="btn btn-success" (click)="validateCart()" [disabled]="isOrdering">
+                <span *ngIf="isOrdering" class="spinner-border spinner-border-sm me-1"></span>
+                <i class="bi bi-lock me-1" *ngIf="!isLoggedIn && !isOrdering"></i>
+                {{ isOrdering ? 'Commande en cours...' : isLoggedIn ? 'Valider la commande' : 'Se connecter pour commander' }}
+              </button>
             </div>
           </div>
         </div>
       </div>
-
     </div>
+
+    <!-- ═══ SUCCÈS COMMANDE ═══ -->
+    <div *ngIf="orderSuccess" class="mt-3">
+      <div class="alert alert-success d-flex align-items-center gap-2 mb-4">
+        <i class="bi bi-check-circle-fill fs-4"></i>
+        <div>
+          <strong>Commande(s) créée(s) avec succès !</strong>
+          <span class="ms-2 text-muted">{{ orderSuccess.count }} commande(s) générée(s)</span>
+        </div>
+      </div>
+
+      <div *ngFor="let order of orderSuccess.orders" class="card shadow-sm mb-3">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <span class="fw-bold">
+            <i class="bi bi-receipt me-1"></i> {{ order.reference }}
+          </span>
+
+          <!-- ✅ Statut commande direct en HTML, pas de helper -->
+          <span class="badge"
+                [class.bg-warning]="order.status === 'pending'"
+                [class.text-dark]="order.status === 'pending'"
+                [class.bg-success]="order.status === 'completed' || order.status === 'paid'"
+                [class.bg-danger]="order.status === 'cancelled'"
+                [class.bg-secondary]="order.status === 'draft'">
+            <ng-container *ngIf="order.status === 'pending'"> En attente</ng-container>
+            <ng-container *ngIf="order.status === 'paid'"> Payé</ng-container>
+            <ng-container *ngIf="order.status === 'completed'"> Complété</ng-container>
+            <ng-container *ngIf="order.status === 'cancelled'"> Annulé</ng-container>
+            <ng-container *ngIf="order.status === 'draft'"> Brouillon</ng-container>
+          </span>
+        </div>
+
+        <div class="card-body">
+          <p class="text-muted small mb-3">
+            <i class="bi bi-shop me-1"></i> {{ order.boutiqueId.nom }}
+            <span class="ms-3">
+              <i class="bi bi-calendar me-1"></i>
+              {{ order.orderDate | date:'dd/MM/yyyy HH:mm' }}
+            </span>
+          </p>
+
+          <!-- Articles -->
+          <div *ngFor="let item of order.items"
+               class="d-flex justify-content-between align-items-center small py-2 border-bottom">
+            <div>
+              <span class="fw-bold">{{ item.productName }}</span>
+              <span class="text-muted ms-1">× {{ item.quantity }}</span>
+            </div>
+            <div class="text-end">
+              <span *ngIf="item.itemDiscountPercentage > 0" class="badge bg-danger me-1">
+                -{{ item.itemDiscountPercentage }}% (-{{ item.itemDiscountAmount | number:'1.2-2' }} €)
+              </span>
+              <span class="fw-bold">{{ item.itemSubtotal | number:'1.2-2' }} €</span>
+            </div>
+          </div>
+
+          <!-- Totaux -->
+          <div class="mt-3 small">
+            <div class="d-flex justify-content-between text-muted">
+              <span>Sous-total</span>
+              <span>{{ order.subtotal | number:'1.2-2' }} €</span>
+            </div>
+            <div *ngIf="order.totalDiscount > 0"
+                 class="d-flex justify-content-between text-success">
+              <span>🎉 Remise totale</span>
+              <span>- {{ order.totalDiscount | number:'1.2-2' }} €</span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold text-primary mt-2 fs-6">
+              <span>Total à payer</span>
+              <span>{{ order.grandTotal | number:'1.2-2' }} €</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paiement footer -->
+        <div class="card-footer bg-white small d-flex justify-content-between align-items-center">
+          <!-- Méthode paiement -->
+          <span>
+            <ng-container *ngIf="order.paymentMethod === 'online'">🌐 En ligne</ng-container>
+            <ng-container *ngIf="order.paymentMethod === 'cash'">💵 Espèces</ng-container>
+            <ng-container *ngIf="order.paymentMethod === 'card'">💳 Carte</ng-container>
+            <ng-container *ngIf="order.paymentMethod === 'transfer'">🏦 Virement</ng-container>
+          </span>
+
+          <!-- Statut paiement -->
+          <span [class.text-warning]="order.paymentStatus === 'pending'"
+                [class.text-success]="order.paymentStatus === 'paid'"
+                [class.text-danger]="order.paymentStatus === 'failed'">
+            <!--
+            <ng-container *ngIf="order.paymentStatus === 'pending'"> Paiement en attente</ng-container>
+            <ng-container *ngIf="order.paymentStatus === 'paid'">✅ Paiement confirmé</ng-container>
+            <ng-container *ngIf="order.paymentStatus === 'failed'">❌ Paiement échoué</ng-container>
+            !-->
+          </span>
+        </div>
+      </div>
+
+      <a routerLink="/shop" class="btn btn-primary mt-2">
+        <i class="bi bi-arrow-left me-1"></i> Continuer mes achats
+      </a>
+    </div>
+
   </ng-container>
 </div>
