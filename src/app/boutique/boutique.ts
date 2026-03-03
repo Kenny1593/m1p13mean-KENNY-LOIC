@@ -4,8 +4,9 @@ import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CategorieService } from '../services/categories.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BoutiqueService } from '../services/boutique.service';
 
-interface Categorie {
+interface Categories {
   _id: string;
   nom: string;
 }
@@ -39,9 +40,9 @@ export class Boutique implements OnInit {
 
   // Formulaire multiple
   form: FormGroup;
-  categories: Categorie[] = [];
+  categories: Categories[] = [];
 
-  constructor(private fb: FormBuilder,private categorieService: CategorieService) {
+  constructor(private fb: FormBuilder,private categorieService: CategorieService,private boutiqueService: BoutiqueService) {
     this.form = this.fb.group({
       nom: [''],
       description: [''],
@@ -53,6 +54,7 @@ export class Boutique implements OnInit {
     });
   }
 
+  // Récupération des catégories pour le select multiple
   ngOnInit() {
     const token = localStorage.getItem('token'); // récupère le token après login
 
@@ -63,17 +65,40 @@ export class Boutique implements OnInit {
     });
 
     this.categorieService.find({ headers }).subscribe({
-    next: (res: any) => {
+    next: (res: any) => {3
       this.categories = Array.isArray(res) ? res : res.result.documents;
     },
     error: (err) => console.error('Erreur récupération catégories', err)
   });
 }
 
+
+//ajout d'une boutique
   onSubmit() {
-    console.log("Boutique créée :", this.form.value);
+
+    const data = {
+      nom: this.form.value.nom,
+      description: this.form.value.description,
+      image: this.imageBase64 ?? '', // Base64
+      telephone: this.form.value.telephone,
+      email: this.form.value.email,
+      actif: this.form.value.actif,
+      categories: this.form.value.categories // tableau des catégories sélectionnées
+  };
+  this.boutiqueService.register(data)
+    .subscribe({
+      next: (response) => {
+        console.log("Succès :", response);
+        alert('Boutique ajoutée avec succès !');
+        window.location.reload();
+      },
+      error: (error) => {
+        alert('Erreur lors de l\'ajout de la boutique.');
+        console.error("Erreur :", error);
+        window.location.reload();
 
   }
+    });
 
-
+  }
 }
