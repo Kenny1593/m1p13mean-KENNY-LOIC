@@ -124,9 +124,7 @@ export class Boutique implements OnInit {
       error: (error) => {
         alert('Erreur lors de l\'ajout de la boutique.');
         console.error("Erreur :", error);
-        window.location.reload();
-
-  }
+      }
     });
 
   }
