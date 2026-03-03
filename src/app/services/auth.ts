@@ -21,7 +21,7 @@ export class AuthService {
       );
   }
 
-  register(data: { _id: number; nom: string; email: string; motDePasse: string; role: string; boutiqueId: number; telephone: string; adresse: string; actif: boolean }): Observable<any> {
+  register(data:any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
 }

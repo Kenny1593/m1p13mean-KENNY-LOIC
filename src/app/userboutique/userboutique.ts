@@ -4,53 +4,45 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth';
 import { Router } from '@angular/router';
 import { Footer } from '../footer/footer';
+import { Navbar } from '../navbar/navbar';
 import { CommonModule } from '@angular/common';
+
 @Component({
-  selector: 'app-user',
-  imports: [FormsModule, RouterModule, Footer, CommonModule],
-  standalone: true,
-  templateUrl: './user.html',
-  styleUrls: ['./user.css'], // ⚡ attention: pluriel
+  selector: 'app-userboutique',
+  imports: [FormsModule, RouterModule, Footer, Navbar, CommonModule],
+  templateUrl: './userboutique.html',
+  styleUrl: './userboutique.css',
 })
-export class User {
+
+
+export class Userboutique {
+
+  constructor(private authService: AuthService, private router: Router) {}
+
   nom: string = '';
   email: string = '';
-  motDePasse: string = '';
-  confirmMotDePasse: string = '';
-  role: string = 'client';
+  motDePasse: string = '000000';
+  role: string = 'boutique_en_attente';
   boutiqueId: number = 0;
   telephone: string = '';
   actif: boolean = true;
 
-  // 🔹 Adresse initialisée pour éviter undefined
-  adresse = {
-    rue: '',
-    ville: '',
-    codePostal: ''
-  };
-
-  constructor(private authService: AuthService, private router: Router) {}
-
-  onSubmit() {
-
+  onsubmit() {
     const data = {
       nom: this.nom,
       email: this.email,
       motDePasse: this.motDePasse, 
       role: this.role,
       telephone: this.telephone,
-      adresse: this.adresse,
       actif: this.actif
     };
 
     this.authService.register(data).subscribe({
       next: (response) => {
         alert('Utilisateur enregistré avec succès !');
-        this.router.navigate(['/login']);
       },
       error: (error) => {
-        console.error("Erreur :", error);
-        alert('Erreur lors de l\'enregistrement : ' + error.error?.message || error.message);
+        alert('Erreur lors de l\'enregistrement de l\'utilisateur.');
       }
     });
   }

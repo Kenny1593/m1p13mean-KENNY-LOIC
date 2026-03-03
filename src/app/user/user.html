@@ -14,17 +14,7 @@
     </div>
 
     <div class="card-body">
-      <form (ngSubmit)="onSubmit()" #userForm="ngForm">
-        <div class="mb-3">
-          <label class="form-label">ID</label>
-          <input 
-            type="number" 
-            class="form-control"
-            [(ngModel)]="_id"
-            name="_id"
-            required>
-        </div>
-
+      <form #userForm="ngForm">
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label">Nom</label>
@@ -57,32 +47,17 @@
             </div>
 
             <div class="col-md-6 mb-3">
-              <label class="form-label  ">Rôle</label>
-              <select              
-                class="form-select"
-                [(ngModel)]="role"
-                name="role"
+              <label class="form-label">Confirmer mot de passe</label>
+              <input 
+                type="password" 
+                class="form-control"
+                [(ngModel)]="confirmMotDePasse"
+                name="confirmMotDePasse"
                 required>
-                <option value="" disabled selected>Choisir un rôle</option>
-                <option value="admin">Admin</option>
-                <option value="boutique">Boutique</option>
-                <option value="client">Client</option>
-                </select>
-                </div>  
-
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Boutique</label>
-                    <select
-                    class="form-select"
-                    [(ngModel)]="boutiqueId"
-                    name="boutiqueId"
-                    required>
-                    <option value="" disabled selected>Choisir une boutique</option>
-                    <!--<option *ngFor="let boutique of boutiques" [value]="boutique.id">{{ boutique.name }}</option>-->
-                    <option value="1">Boutique 1</option>
-                    <option value="2">Boutique 2</option>
-                    </select>
+                <div class="text-danger" *ngIf="confirmMotDePasse && motDePasse !== confirmMotDePasse">
+                  Les mots de passe ne correspondent pas
                 </div>
+            </div>
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Téléphone</label>
@@ -95,27 +70,34 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Adresse</label>
+                    <label class="form-label">Rue</label>
                     <input 
                     type="text" 
                     class="form-control"
-                    [(ngModel)]="adresse"
-                    name="adresse"
+                    [(ngModel)]="adresse.rue"
+                    name="rue"
                     required>
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Actif</label>
-                    <select
-                    class="form-select"
-                    [(ngModel)]="actif"
-                    name="actif"
+                    <label class="form-label">Ville</label>
+                    <input 
+                    type="text" 
+                    class="form-control"
+                    [(ngModel)]="adresse.ville"
+                    name="ville"
                     required>
-                    <option value="" disabled selected>Choisir un état</option>
-                    <option value="true">Oui</option>
-                    <option value="false">Non</option>
-                    </select>
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Code postal</label>
+                    <input 
+                    type="text" 
+                    class="form-control"
+                    [(ngModel)]="adresse.codePostal"
+                    name="codePostal"
+                    required>
+                </div>
+
         </div>
 
         <div class="text-end">
@@ -130,13 +112,11 @@
       </form>
     </div>
   </div>
+  <!-- Zone dynamique -->
+    <div class="flex-fill p-4 bg-light">
+      <router-outlet></router-outlet>
+    </div>
+    </div>
+<app-footer></app-footer>
 
-</div>
 
-<footer class="bg-dark text-white mt-5 p-4 d-flex flex-column align-items-center">
-  <div class="text-center">
-    <p class="mb-1">ETU1593 - RAKOTOARITAHINA Labarre Tokiniaina Kenny</p>
-    <p class="mb-1">ETU1554 - RAVELOARIMANANA Dilivio Loic</p>
-    <small>&copy; 2026 Tous droits réservés</small>
-  </div>
-</footer>
