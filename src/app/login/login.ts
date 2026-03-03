@@ -38,7 +38,7 @@ export class Login {
         this.router.navigate(['/categories']);
 
       } else if (role === 'client') {
-        this.router.navigate(['/user']);
+        this.router.navigate(['/cart']);
 
       } else if (role === 'boutique') {
         const boutiqueId = response.data.user.boutiqueId;
