@@ -1,0 +1,366 @@
+<div class="d-flex" style="min-height: 100vh;">
+  <app-navbar></app-navbar>
+
+  <div class="flex-grow-1 p-4 bg-light">
+
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h3 class="fw-bold mb-0">🧾 Nouvelle vente</h3>
+        <small class="text-muted">Vente en magasin</small>
+      </div>
+      <a routerLink="/orders" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Retour aux commandes
+      </a>
+    </div>
+
+    <!-- Chargement -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary"></div>
+      <p class="mt-2 text-muted">Chargement des produits...</p>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         RÉSUMÉ APRÈS SUCCÈS (depuis backend)
+    ══════════════════════════════════════ -->
+    <div *ngIf="orderResult" class="card shadow-sm">
+      <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+        <span class="fw-bold">
+          <i class="bi bi-check-circle me-1"></i> Vente enregistrée avec succès
+        </span>
+        <span class="badge bg-white text-success fs-6">
+          {{ orderResult.order.reference }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <!-- Infos globales -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-3">
+            <small class="text-muted d-block">Client</small>
+            <strong>{{ orderResult.order.nomClient || '—' }}</strong>
+          </div>
+          <div class="col-md-3">
+            <small class="text-muted d-block">Vendeur</small>
+            <strong>{{ orderResult.order.sellerId?.nom }}</strong>
+          </div>
+          <div class="col-md-3">
+            <small class="text-muted d-block">Boutique</small>
+            <strong>{{ orderResult.order.boutiqueId?.nom }}</strong>
+          </div>
+          <div class="col-md-3">
+            <small class="text-muted d-block">Date</small>
+            <strong>{{ orderResult.order.orderDate | date:'dd/MM/yyyy HH:mm' }}</strong>
+          </div>
+          <div class="col-md-3">
+            <small class="text-muted d-block">Paiement</small>
+            <strong>
+              <ng-container *ngIf="orderResult.order.paymentMethod === 'cash'"> Espèces</ng-container>
+              <ng-container *ngIf="orderResult.order.paymentMethod === 'card'"> Carte</ng-container>
+              <ng-container *ngIf="orderResult.order.paymentMethod === 'transfer'"> Virement</ng-container>
+            </strong>
+          </div>
+          <div class="col-md-3">
+            <small class="text-muted d-block">Statut paiement</small>
+            <span class="badge bg-success"> Payé</span>
+          </div>
+        </div>
+
+        <!-- Tableau articles -->
+        <table class="table table-bordered table-sm">
+          <thead class="table-dark">
+            <tr>
+              <th>Produit</th>
+              <th class="text-end">Prix unit.</th>
+              <th class="text-center">Qté</th>
+              <th class="text-end">Remise article</th>
+              <th class="text-end">Sous-total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of orderResult.order.items">
+              <td class="fw-bold">{{ item.productName }}</td>
+              <td class="text-end">{{ item.productPrice | number:'1.2-2' }} €</td>
+              <td class="text-center">{{ item.quantity }}</td>
+              <td class="text-end">
+                <span *ngIf="item.itemDiscountPercentage > 0" class="text-danger">
+                  -{{ item.itemDiscountPercentage }}%
+                  <small>(-{{ item.itemDiscountAmount | number:'1.2-2' }} €)</small>
+                </span>
+                <span *ngIf="item.itemDiscountPercentage === 0" class="text-muted">—</span>
+              </td>
+              <td class="text-end fw-bold">{{ item.itemSubtotal | number:'1.2-2' }} €</td>
+            </tr>
+          </tbody>
+          <tfoot class="table-light">
+            <tr>
+              <td colspan="4" class="text-end text-muted">Sous-total articles</td>
+              <td class="text-end">{{ orderResult.order.subtotal | number:'1.2-2' }} €</td>
+            </tr>
+            <tr *ngIf="orderResult.order.globalDiscountPercentage > 0">
+              <td colspan="4" class="text-end text-warning">
+                Remise globale ({{ orderResult.order.globalDiscountPercentage }}%)
+              </td>
+              <td class="text-end text-warning">
+                -{{ orderResult.order.globalDiscountAmount | number:'1.2-2' }} €
+              </td>
+            </tr>
+            <tr *ngIf="orderResult.order.totalDiscount > 0">
+              <td colspan="4" class="text-end text-success fw-bold"> Remise totale</td>
+              <td class="text-end text-success fw-bold">
+                -{{ orderResult.order.totalDiscount | number:'1.2-2' }} €
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4" class="text-end fw-bold text-primary fs-6">Total payé</td>
+              <td class="text-end fw-bold text-primary fs-6">
+                {{ orderResult.order.grandTotal | number:'1.2-2' }} €
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <button class="btn btn-primary mt-2" (click)="resetForm()">
+          <i class="bi bi-plus-circle me-1"></i> Nouvelle vente
+        </button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         FORMULAIRE
+    ══════════════════════════════════════ -->
+    <form [formGroup]="form" *ngIf="!loading && !orderResult">
+
+      <!-- PARTIE 1 : Infos globales -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+          <i class="bi bi-info-circle me-1"></i> Informations de la vente
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Nom du client</label>
+              <input type="text" class="form-control"
+                     formControlName="nomClient"
+                     placeholder="Ex: Sophie Martin">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">
+                Méthode de paiement <span class="text-danger">*</span>
+              </label>
+              <select class="form-select" formControlName="paymentMethod"
+                [class.is-invalid]="form.get('paymentMethod')?.invalid && form.get('paymentMethod')?.touched">
+                <option value="cash"> Espèces</option>
+                <option value="card"> Carte bancaire</option>
+                <option value="transfer"> Virement</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Remise globale (%)</label>
+              <div class="input-group">
+                <input type="number" class="form-control"
+                       formControlName="globalDiscountPercentage"
+                       min="0" max="100" step="0.5">
+                <span class="input-group-text">%</span>
+              </div>
+              <small class="text-muted">Appliquée sur le sous-total (0 = aucune)</small>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- PARTIE 2 : Lignes articles -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+          <span><i class="bi bi-cart3 me-1"></i> Articles</span>
+          <button type="button" class="btn btn-sm btn-success" (click)="addItem()">
+            <i class="bi bi-plus-circle me-1"></i> Ajouter un article
+          </button>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle mb-0">
+              <thead class="table-secondary">
+                <tr>
+                  <th style="min-width:260px">Article</th>
+                  <th style="width:120px" class="text-end">Prix unit.</th>
+                  <th style="width:130px" class="text-center">Remise (%)</th>
+                  <th style="width:110px" class="text-center">Quantité</th>
+                  <th style="width:130px" class="text-end">Sous-total</th>
+                  <th style="width:50px"></th>
+                </tr>
+              </thead>
+
+              <tbody formArrayName="items">
+                <tr *ngFor="let item of items.controls; let i = index"
+                    [formGroupName]="i">
+
+                  <!-- Col 1 : Autocomplete produit -->
+                  <td>
+                    <div class="position-relative">
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        [value]="searchTerms[i]"
+                        (input)="onSearch(i, $any($event.target).value)"
+                        (focus)="dropdownOpen[i] = true"
+                        (blur)="closeDropdown(i)"
+                        placeholder="Rechercher un produit..."
+                        [class.is-invalid]="item.get('productId')?.invalid && item.get('productId')?.touched"
+                        autocomplete="off">
+
+                      <!-- Dropdown résultats -->
+                      <div *ngIf="dropdownOpen[i] && (filteredProduits[i]?.length ?? 0) > 0"
+                           class="position-absolute w-100 border rounded bg-white shadow-sm"
+                           style="z-index:1000; max-height:220px; overflow-y:auto; top:100%">
+                        <div *ngFor="let p of filteredProduits[i]"
+                             class="px-3 py-2 border-bottom"
+                             style="cursor:pointer"
+                             (mousedown)="selectProduit(i, p)"
+                             [class.bg-light]="item.get('productId')?.value === p._id">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                              <span class="fw-bold">{{ p.nom }}</span>
+                              <small *ngIf="p.reference" class="text-muted ms-1">
+                                — {{ p.reference }}
+                              </small>
+                            </div>
+                            <div class="text-end">
+                              <span class="text-primary fw-bold">{{ p.prix | number:'1.2-2' }} €</span>
+                              <span *ngIf="p.enPromotion" class="badge bg-danger ms-1">
+                                -{{ p.pourcentagePromo }}%
+                              </span>
+                              <span *ngIf="!p.enPromotion && p.remise > 0" class="badge bg-warning text-dark ms-1">
+                                -{{ p.remise }}%
+                              </span>
+                            </div>
+                          </div>
+                          <small [class.text-danger]="p.quantite < 5"
+                                 [class.text-success]="p.quantite >= 5">
+                            Stock : {{ p.quantite }}
+                          </small>
+                        </div>
+                      </div>
+
+                      <!-- Aucun résultat -->
+                      <div *ngIf="dropdownOpen[i] && filteredProduits[i]?.length === 0"
+                           class="position-absolute w-100 border rounded bg-white shadow-sm px-3 py-2 text-muted"
+                           style="z-index:1000; top:100%">
+                        Aucun produit trouvé
+                      </div>
+                    </div>
+
+                    <!-- Stock info après sélection -->
+                    <small *ngIf="item.get('productId')?.value" class="mt-1 d-block">
+                      <span [class.text-danger]="getProduitById(item.get('productId')?.value)?.quantite! < 5"
+                            [class.text-warning]="getProduitById(item.get('productId')?.value)?.quantite! >= 5 && getProduitById(item.get('productId')?.value)?.quantite! < 10"
+                            [class.text-success]="getProduitById(item.get('productId')?.value)?.quantite! >= 10">
+                        Stock disponible : {{ getProduitById(item.get('productId')?.value)?.quantite }}
+                      </span>
+                    </small>
+                  </td>
+
+                  <!-- Col 2 : Prix readonly -->
+                  <td class="text-end">
+                    <input type="number"
+                           class="form-control form-control-sm text-end bg-light"
+                           formControlName="prix"
+                           readonly>
+                  </td>
+
+                  <!-- Col 3 : Remise article -->
+                  <td>
+                    <div class="input-group input-group-sm">
+                      <input type="number"
+                             class="form-control text-center"
+                             formControlName="itemDiscountPercentage"
+                             min="0" max="100" step="0.5"
+                             [class.is-invalid]="item.get('itemDiscountPercentage')?.invalid">
+                      <span class="input-group-text">%</span>
+                    </div>
+                  </td>
+
+                  <!-- Col 4 : Quantité -->
+                  <td>
+                    <input type="number"
+                           class="form-control form-control-sm text-center"
+                           formControlName="quantity"
+                           min="1"
+                           [class.is-invalid]="item.get('quantity')?.invalid && item.get('quantity')?.touched">
+                  </td>
+
+                  <!-- Col 5 : Sous-total calculé -->
+                  <td class="text-end fw-bold text-primary">
+                    {{ getItemSubtotal(i) | number:'1.2-2' }} €
+                  </td>
+
+                  <!-- Supprimer ligne -->
+                  <td class="text-center">
+                    <button type="button"
+                            class="btn btn-outline-danger btn-sm"
+                            (click)="removeItem(i)"
+                            [disabled]="items.length === 1"
+                            title="Supprimer">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+
+                </tr>
+              </tbody>
+
+              <!-- Totaux -->
+              <tfoot class="table-light fw-bold">
+                <tr>
+                  <td colspan="4" class="text-end text-muted">Sous-total articles</td>
+                  <td class="text-end">{{ getItemsSubtotal() | number:'1.2-2' }} €</td>
+                  <td></td>
+                </tr>
+                <tr *ngIf="form.get('globalDiscountPercentage')?.value > 0">
+                  <td colspan="4" class="text-end text-warning">
+                    Remise globale ({{ form.get('globalDiscountPercentage')?.value }}%)
+                  </td>
+                  <td class="text-end text-warning">
+                    -{{ getGlobalDiscountAmount() | number:'1.2-2' }} €
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colspan="4" class="text-end text-primary fs-6">Total à payer</td>
+                  <td class="text-end text-primary fs-6">
+                    {{ getGrandTotal() | number:'1.2-2' }} €
+                  </td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Erreur -->
+      <div *ngIf="error" class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-1"></i> {{ error }}
+      </div>
+
+      <!-- Actions -->
+      <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-outline-secondary" (click)="resetForm()">
+          <i class="bi bi-arrow-counterclockwise me-1"></i> Réinitialiser
+        </button>
+        <button type="button" class="btn btn-success"
+                (click)="submitOrder()" [disabled]="submitting">
+          <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+          <i *ngIf="!submitting" class="bi bi-check-circle me-1"></i>
+          {{ submitting ? 'Enregistrement...' : 'Valider la vente' }}
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

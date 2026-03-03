@@ -155,4 +155,18 @@ export class ShopService {
   getCurrentPage(): number {
     return this.currentPageSubject.getValue();
   }
+
+  // Ajoute dans ShopService
+  orderCart(
+    cartItems: { productId: string; quantity: number }[],
+    shippingAddress: string
+  ): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.post(
+      `http://localhost:3000/api/cart/order`,
+      { cartItems, shippingAddress },
+      { headers }
+    );
+  }
 }
