@@ -1,0 +1,22 @@
+/* Styles globaux pour le shop */
+.card-header {
+  padding: 1rem 1.25rem;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+h1.h4 {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .col-md-3 {
+    order: 2;
+  }
+
+  .col-md-9 {
+    order: 1;
+  }
+}
