@@ -53,6 +53,7 @@ export class Boutique implements OnInit {
       telephone: [''],
       email: [''],
       actif: [true],
+      userboutique: new FormControl([]), // champ select multiple
       categories: new FormControl([]) // champ select multiple
     });
   }
