@@ -13,8 +13,8 @@ import { RouterModule } from '@angular/router';
   styleUrl: './login.css',
 })
 export class Login {
-  email: string = '';
-  motDePasse: string = '';
+  email: string = 'voni@gmail.com';
+  motDePasse: string = 'voni123';
 
   constructor(private authService: AuthService, private router: Router) {}
 

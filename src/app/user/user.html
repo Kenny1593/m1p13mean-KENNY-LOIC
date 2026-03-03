@@ -14,7 +14,7 @@
     </div>
 
     <div class="card-body">
-      <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+      <form #userForm="ngForm">
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label">Nom</label>
@@ -35,6 +35,30 @@
               name="email"
               required>
           </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Mot de passe</label>
+            <input 
+              type="password" 
+              class="form-control"
+              [(ngModel)]="motDePasse"
+              name="motDePasse"
+              required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Confirmer mot de passe</label>
+              <input 
+                type="password" 
+                class="form-control"
+                [(ngModel)]="confirmMotDePasse"
+                name="confirmMotDePasse"
+                required>
+                <div class="text-danger" *ngIf="confirmMotDePasse && motDePasse !== confirmMotDePasse">
+                  Les mots de passe ne correspondent pas
+                </div>
+            </div>
+
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Téléphone</label>
                     <input 
@@ -46,27 +70,34 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Adresse</label>
+                    <label class="form-label">Rue</label>
                     <input 
                     type="text" 
                     class="form-control"
-                    [(ngModel)]="adresse"
-                    name="adresse"
+                    [(ngModel)]="adresse.rue"
+                    name="rue"
                     required>
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Actif</label>
-                    <select
-                    class="form-select"
-                    [(ngModel)]="actif"
-                    name="actif"
+                    <label class="form-label">Ville</label>
+                    <input 
+                    type="text" 
+                    class="form-control"
+                    [(ngModel)]="adresse.ville"
+                    name="ville"
                     required>
-                    <option value="" disabled selected>Choisir un état</option>
-                    <option value="true">Oui</option>
-                    <option value="false">Non</option>
-                    </select>
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Code postal</label>
+                    <input 
+                    type="text" 
+                    class="form-control"
+                    [(ngModel)]="adresse.codePostal"
+                    name="codePostal"
+                    required>
+                </div>
+
         </div>
 
         <div class="text-end">
