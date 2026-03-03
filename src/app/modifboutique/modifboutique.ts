@@ -26,7 +26,7 @@ interface Categories {
 export class Modifboutique {
 
   form: FormGroup;
-    categories: Categories[] = [];
+  categories: Categories[] = [];
   
     constructor(private fb: FormBuilder,private categorieService: CategorieService,private boutiqueService: BoutiqueService,private userService: UsersService ) {
       this.form = this.fb.group({
