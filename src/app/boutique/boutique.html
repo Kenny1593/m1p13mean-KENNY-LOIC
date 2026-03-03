@@ -34,6 +34,13 @@
         </select>
     </div>
 
+    <div class="mb-3">
+        <label>Utilisateurs de la boutique</label>
+        <select class="form-select" formControlName="users" multiple>
+        <option *ngFor="let user of users" [ngValue]="user._id">{{ user.nom }}</option>
+        </select>
+    </div>
+
       <!-- Image -->
       <div class="mb-3">
         <label class="form-label">Logo</label>
@@ -69,11 +76,11 @@
             required>
     </div>
 
-
-
+    <div class="col-mb-3">
       <button type="submit" class="btn btn-primary w-100">
         Enregistrer
       </button>
+    </div>
 
     </form>
   </div>

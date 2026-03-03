@@ -8,8 +8,15 @@ import { BoutiqueService } from '../services/boutique.service';
 import { Footer } from '../footer/footer';
 import { Navbar } from '../navbar/navbar';
 import { RouterModule } from '@angular/router';
+import { User } from '../user/user';
+import { ApiResponse, UsersService } from '../services/users.service';
 
 interface Categories {
+  _id: string;
+  nom: string;
+}
+
+interface Users{
   _id: string;
   nom: string;
 }
@@ -44,8 +51,9 @@ export class Boutique implements OnInit {
   // Formulaire multiple
   form: FormGroup;
   categories: Categories[] = [];
+  users: Users[] = [];
 
-  constructor(private fb: FormBuilder,private categorieService: CategorieService,private boutiqueService: BoutiqueService) {
+  constructor(private fb: FormBuilder,private categorieService: CategorieService,private boutiqueService: BoutiqueService,private userService: UsersService ) {
     this.form = this.fb.group({
       nom: [''],
       description: [''],
@@ -53,7 +61,7 @@ export class Boutique implements OnInit {
       telephone: [''],
       email: [''],
       actif: [true],
-      userboutique: new FormControl([]), // champ select multiple
+      users: new FormControl([]), // champ select multiple
       categories: new FormControl([]) // champ select multiple
     });
   }
@@ -68,6 +76,7 @@ export class Boutique implements OnInit {
       Authorization: `Bearer ${token}`
     });
 
+    // Récupération des catégories pour le select multiple
     this.categorieService.find({ headers }).subscribe({
     next: (res: any) => {3
       this.categories = Array.isArray(res) ? res : res.result.documents;
@@ -76,7 +85,19 @@ export class Boutique implements OnInit {
   });
 
 
-  
+    // Récupération des utilisateurs en attente pour le select multiple
+    this.userService.find({ headers }).subscribe({
+    next: (response: ApiResponse) => {
+      console.log("Réponse complète :", response);
+
+      this.users = response.data.users ?? [];
+      console.log("Utilisateurs en attente :", this.users);
+    },
+    error: (err) => {
+      console.error("Erreur :", err);
+    }
+  });
+
 }
 
 
@@ -90,8 +111,10 @@ export class Boutique implements OnInit {
       telephone: this.form.value.telephone,
       email: this.form.value.email,
       actif: this.form.value.actif,
-      categories: this.form.value.categories // tableau des catégories sélectionnées
+      users: this.form.value.users,
+      categories: this.form.value.categories, // tableau des catégories sélectionnées
   };
+  
   this.boutiqueService.register(data)
     .subscribe({
       next: (response) => {

@@ -12,7 +12,7 @@ export class BoutiqueService {
   constructor(private http: HttpClient) {}
 
   register(data: { nom: string; description: string; image: string; email: string;categories: string[] ; actif: boolean }): Observable<any> {
-        return this.http.post(`${this.apiUrl}`, data);
+        return this.http.post(`${this.apiUrl}with-relations`, data);
       }
   
 }
