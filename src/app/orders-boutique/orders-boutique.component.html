@@ -9,7 +9,7 @@
     <!-- En-tête -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h3 class="mb-0 fw-bold">📦 Commandes</h3>
+        <h3 class="mb-0 fw-bold"> Commandes</h3>
         <small class="text-muted">{{ totalDocuments }} commande(s) au total</small>
       </div>
     </div>
@@ -22,11 +22,11 @@
           <label class="form-label small fw-bold mb-1">Statut</label>
           <select class="form-select form-select-sm" [(ngModel)]="filters.status">
             <option value="">Tous</option>
-            <option value="pending">⏳ En attente</option>
-            <option value="paid">✅ Payé</option>
-            <option value="completed">📦 Complété</option>
-            <option value="cancelled">❌ Annulé</option>
-            <option value="draft">📝 Brouillon</option>
+            <option value="pending"> En attente</option>
+            <option value="paid"> Payé</option>
+            <option value="completed"> Complété</option>
+            <option value="cancelled"> Annulé</option>
+            <option value="draft"> Brouillon</option>
           </select>
         </div>
 
@@ -34,8 +34,8 @@
           <label class="form-label small fw-bold mb-1">Type</label>
           <select class="form-select form-select-sm" [(ngModel)]="filters.type">
             <option value="">Tous</option>
-            <option value="online">🌐 En ligne</option>
-            <option value="in_store">🏪 En magasin</option>
+            <option value="online"> En ligne</option>
+            <option value="in_store"> En magasin</option>
           </select>
         </div>
 
@@ -116,11 +116,11 @@
                     [class.bg-success]="order.status === 'completed' || order.status === 'paid'"
                     [class.bg-danger]="order.status === 'cancelled'"
                     [class.bg-secondary]="order.status === 'draft'">
-                    <ng-container *ngIf="order.status === 'pending'">⏳ En attente</ng-container>
-                    <ng-container *ngIf="order.status === 'paid'">✅ Payé</ng-container>
-                    <ng-container *ngIf="order.status === 'completed'">📦 Complété</ng-container>
-                    <ng-container *ngIf="order.status === 'cancelled'">❌ Annulé</ng-container>
-                    <ng-container *ngIf="order.status === 'draft'">📝 Brouillon</ng-container>
+                    <ng-container *ngIf="order.status === 'pending'"> En attente</ng-container>
+                    <ng-container *ngIf="order.status === 'paid'"> Payé</ng-container>
+                    <ng-container *ngIf="order.status === 'completed'"> Complété</ng-container>
+                    <ng-container *ngIf="order.status === 'cancelled'"> Annulé</ng-container>
+                    <ng-container *ngIf="order.status === 'draft'"> Brouillon</ng-container>
                   </span>
                 </td>
                 <td>
@@ -140,9 +140,9 @@
                     [class.text-success]="order.paymentStatus === 'paid'"
                     [class.text-danger]="order.paymentStatus === 'failed'"
                     class="small fw-bold">
-                    <ng-container *ngIf="order.paymentStatus === 'pending'">⏳ En attente</ng-container>
-                    <ng-container *ngIf="order.paymentStatus === 'paid'">✅ Payé</ng-container>
-                    <ng-container *ngIf="order.paymentStatus === 'failed'">❌ Échoué</ng-container>
+                    <ng-container *ngIf="order.paymentStatus === 'pending'"> En attente</ng-container>
+                    <ng-container *ngIf="order.paymentStatus === 'paid'"> Payé</ng-container>
+                    <ng-container *ngIf="order.paymentStatus === 'failed'"> Échoué</ng-container>
                   </span>
                 </td>
                 <td class="small text-muted">
@@ -195,7 +195,7 @@
                           <td class="text-end">{{ order.subtotal | number:'1.2-2' }} €</td>
                         </tr>
                         <tr *ngIf="order.totalDiscount > 0">
-                          <td colspan="4" class="text-end text-success">🎉 Remise totale</td>
+                          <td colspan="4" class="text-end text-success"> Remise totale</td>
                           <td class="text-end text-success">-{{ order.totalDiscount | number:'1.2-2' }} €</td>
                         </tr>
                         <tr>

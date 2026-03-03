@@ -184,10 +184,10 @@
         <div class="card-footer bg-white small d-flex justify-content-between align-items-center">
           <!-- Méthode paiement -->
           <span>
-            <ng-container *ngIf="order.paymentMethod === 'online'">🌐 En ligne</ng-container>
-            <ng-container *ngIf="order.paymentMethod === 'cash'">💵 Espèces</ng-container>
-            <ng-container *ngIf="order.paymentMethod === 'card'">💳 Carte</ng-container>
-            <ng-container *ngIf="order.paymentMethod === 'transfer'">🏦 Virement</ng-container>
+            <ng-container *ngIf="order.paymentMethod === 'online'"> En ligne</ng-container>
+            <ng-container *ngIf="order.paymentMethod === 'cash'"> Espèces</ng-container>
+            <ng-container *ngIf="order.paymentMethod === 'card'"> Carte</ng-container>
+            <ng-container *ngIf="order.paymentMethod === 'transfer'"> Virement</ng-container>
           </span>
 
           <!-- Statut paiement -->
@@ -196,8 +196,8 @@
                 [class.text-danger]="order.paymentStatus === 'failed'">
             <!--
             <ng-container *ngIf="order.paymentStatus === 'pending'"> Paiement en attente</ng-container>
-            <ng-container *ngIf="order.paymentStatus === 'paid'">✅ Paiement confirmé</ng-container>
-            <ng-container *ngIf="order.paymentStatus === 'failed'">❌ Paiement échoué</ng-container>
+            <ng-container *ngIf="order.paymentStatus === 'paid'"> Paiement confirmé</ng-container>
+            <ng-container *ngIf="order.paymentStatus === 'failed'"> Paiement échoué</ng-container>
             !-->
           </span>
         </div>

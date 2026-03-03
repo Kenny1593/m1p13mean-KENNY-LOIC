@@ -10,6 +10,10 @@ import { Shop } from './shop/shop';
 import { CartComponent } from './cart/cart.component';
 import { OrdersBoutiqueComponent } from './orders-boutique/orders-boutique.component';
 
+import { CreateOrderComponent } from './create-order/create-order.component';
+
+
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -23,4 +27,5 @@ export const routes: Routes = [
   { path: 'shop', component: Shop },
   { path: 'cart', component: CartComponent },
   { path: 'orders', component: OrdersBoutiqueComponent },
+  { path: 'orders/create', component: CreateOrderComponent },
 ];
