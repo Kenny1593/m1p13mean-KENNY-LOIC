@@ -74,6 +74,9 @@ export class Boutique implements OnInit {
     },
     error: (err) => console.error('Erreur récupération catégories', err)
   });
+
+
+  
 }
 
 
