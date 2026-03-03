@@ -23,4 +23,7 @@ export class BoutiqueService {
     return this.http.get<Boutique>(`${this.apiUrl}${id}`);
   }
 
+  getBoutiques(options?: { headers: HttpHeaders }): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}my`,options);
+  }
 }
