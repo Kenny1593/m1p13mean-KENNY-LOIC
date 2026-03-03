@@ -24,17 +24,29 @@ export class Login {
       email: this.email,
       motDePasse : this.motDePasse
     };
-
+    alert('Connexion réussie !');
+    
     this.authService.login(data).subscribe({
       next: (response) => {
-        console.log("Succès :", response);
-        alert('Connexion réussie !');
+      const users = response?.data?.users;
+      const role = response.data.user.role;
+      console.log("Role :", role);
+
+      if (role === 'admin') {
         this.router.navigate(['/categories']);
-      },
+      } else if (role === 'client') {
+        this.router.navigate(['/user']);
+      } else if (role === 'boutique') {
+        this.router.navigate(['/userboutique']);
+      }
+
+    
+  },
       error: (error) => {
         alert(error.message || 'Erreur de connexion' );
         console.error("Erreur :", error);
       }
+    
     });
 }
 }
