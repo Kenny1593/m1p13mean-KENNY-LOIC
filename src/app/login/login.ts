@@ -25,19 +25,26 @@ export class Login {
       motDePasse : this.motDePasse
     };
     alert('Connexion réussie !');
-    
+
     this.authService.login(data).subscribe({
       next: (response) => {
       const users = response?.data?.users;
       const role = response.data.user.role;
+
       console.log("Role :", role);
+
 
       if (role === 'admin') {
         this.router.navigate(['/categories']);
+
       } else if (role === 'client') {
         this.router.navigate(['/user']);
+
       } else if (role === 'boutique') {
-        this.router.navigate(['/userboutique']);
+        const boutiqueId = response.data.user.boutiqueId;
+        console.log("Boutique ID :", boutiqueId);
+        localStorage.setItem('boutiqueId', boutiqueId);
+        this.router.navigate(['/modifboutique']);
       }
 
     

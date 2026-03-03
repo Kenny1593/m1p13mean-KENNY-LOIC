@@ -8,7 +8,6 @@ import { BoutiqueService } from '../services/boutique.service';
 import { Footer } from '../footer/footer';
 import { Navbar } from '../navbar/navbar';
 import { RouterModule } from '@angular/router';
-import { User } from '../user/user';
 import { ApiResponse, UsersService } from '../services/users.service';
 
 interface Categories {
@@ -114,7 +113,7 @@ export class Boutique implements OnInit {
       users: this.form.value.users,
       categories: this.form.value.categories, // tableau des catégories sélectionnées
   };
-  
+
   this.boutiqueService.register(data)
     .subscribe({
       next: (response) => {

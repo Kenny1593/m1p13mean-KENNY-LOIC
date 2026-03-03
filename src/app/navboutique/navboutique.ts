@@ -15,6 +15,7 @@ export class Navboutique {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('boutiqueId');
     this.router.navigate(['/login']);
   }
 
