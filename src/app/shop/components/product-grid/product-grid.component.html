@@ -1,0 +1,78 @@
+<!-- ÉTAT : CHARGEMENT -->
+<div *ngIf="loading" class="col-12 text-center py-5">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Chargement...</span>
+  </div>
+  <p class="mt-2 text-muted">Chargement des produits...</p>
+</div>
+
+<!-- ÉTAT : ERREUR -->
+<div *ngIf="!loading && error" class="col-12 text-center py-5">
+  <div class="alert alert-danger">{{ error }}</div>
+</div>
+
+<!-- ÉTAT : AUCUN PRODUIT -->
+<div *ngIf="!loading && products.length === 0" class="col-12 text-center py-5">
+  <p class="text-muted">Aucun produit disponible dans cette catégorie</p>
+</div>
+
+<!-- GRILLE DE PRODUITS -->
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+  <div *ngFor="let product of products" class="col">
+    <div class="card h-100 shadow-sm">
+      <!-- IMAGE + BADGE PROMO -->
+      <div class="position-relative">
+        <div *ngIf="isProductOnSale(product)" class="position-absolute top-0 end-0 bg-danger text-white px-2 py-1 rounded-start">
+          -{{ calculateDiscountPercentage(product) }}%
+        </div>
+        <img
+          [src]="product.image"
+          class="card-img-top"
+          alt="{{ product.nom }}"
+          style="height: 200px; object-fit: cover;"
+          (error)="product.image = 'https://via.placeholder.com/200x150?text=Pas+d\'image'"
+        >
+      </div>
+
+      <!-- CORPS DE LA CARTE -->
+      <div class="card-body">
+        <h5 class="card-title">{{ product.nom }}</h5>
+        <p class="card-text text-muted small">
+          {{ product.description | slice:0:80 }}{{ product.description.length > 80 ? '...' : '' }}
+        </p>
+
+        <!-- PRIX + BOUTON -->
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div>
+            <span *ngIf="isProductOnSale(product)" class="text-decoration-line-through text-muted small">
+              {{ product.prix | number: '1.2-2' }} €
+            </span>
+            <span class="h5 fw-bold text-primary">{{ product.prixFinal | number: '1.2-2' }} €</span>
+          </div>
+          <button class="btn btn-sm btn-primary" (click)="addToCart(product)">
+            <i class="bi bi-cart me-1"></i> Ajouter
+          </button>
+        </div>
+
+        <!-- ✅ NOM DE LA BOUTIQUE -->
+        <div class="mt-2 small">
+          <span class="badge bg-light text-dark border">
+            <i class="bi bi-shop me-1"></i> {{ product.boutiqueNom }}
+          </span>
+        </div>
+      </div>
+
+      <!-- PIED DE CARTE -->
+      <div class="card-footer bg-white py-2">
+        <div class="d-flex justify-content-between small text-muted">
+          <span [class.text-danger]="product.quantite < 5"
+                [class.text-warning]="product.quantite >= 5 && product.quantite < 10"
+                [class.text-success]="product.quantite >= 10">
+            {{ product.quantite }} en stock
+          </span>
+          <span>{{ product.categorieNom }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

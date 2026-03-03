@@ -1,0 +1,37 @@
+<nav aria-label="Pagination" *ngIf="totalPages > 1">
+  <ul class="pagination justify-content-center mb-0">
+    <li class="page-item" [class.disabled]="page === 1">
+      <a class="page-link" (click)="goToPage(getFirstPage())">«</a>
+    </li>
+
+    <li class="page-item" [class.disabled]="page === 1">
+      <a class="page-link" (click)="goToPage(getPreviousPage())">‹</a>
+    </li>
+
+    <li class="page-item" *ngIf="page > 3">
+      <a class="page-link" (click)="goToPage(1)">1</a>
+    </li>
+    <li class="page-item disabled" *ngIf="page > 4">
+      <span class="page-link">...</span>
+    </li>
+
+    <li *ngFor="let p of pages" class="page-item" [class.active]="p === page">
+      <a class="page-link" (click)="goToPage(p)">{{ p }}</a>
+    </li>
+
+    <li class="page-item disabled" *ngIf="page < totalPages - 3">
+      <span class="page-link">...</span>
+    </li>
+    <li class="page-item" *ngIf="page < totalPages - 2">
+      <a class="page-link" (click)="goToPage(totalPages)">{{ totalPages }}</a>
+    </li>
+
+    <li class="page-item" [class.disabled]="page === totalPages">
+      <a class="page-link" (click)="goToPage(getNextPage())">›</a>
+    </li>
+
+    <li class="page-item" [class.disabled]="page === totalPages">
+      <a class="page-link" (click)="goToPage(getLastPage())">»</a>
+    </li>
+  </ul>
+</nav>

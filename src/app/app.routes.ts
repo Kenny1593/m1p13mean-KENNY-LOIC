@@ -6,6 +6,8 @@ import { Boutique } from './boutique/boutique';
 import { Userboutique } from './userboutique/userboutique';
 import { Produits } from './produits/produits';
 import { Modifboutique } from './modifboutique/modifboutique';
+import { Shop } from './shop/shop';
+import { CartComponent } from './cart/cart.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -15,5 +17,7 @@ export const routes: Routes = [
     { path: 'boutique', component: Boutique },
     {path: 'userboutique',component: Userboutique},
     {path: 'produit',component: Produits},
-    {path:'modifboutique',component: Modifboutique}
+    {path:'modifboutique',component: Modifboutique},
+    { path: 'shop', component: Shop },
+    { path: 'cart', component: CartComponent },
 ];
