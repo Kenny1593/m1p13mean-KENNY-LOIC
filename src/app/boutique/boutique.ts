@@ -5,6 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CategorieService } from '../services/categories.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BoutiqueService } from '../services/boutique.service';
+import { Footer } from '../footer/footer';
+import { Navbar } from '../navbar/navbar';
+import { RouterModule } from '@angular/router';
 
 interface Categories {
   _id: string;
@@ -14,7 +17,7 @@ interface Categories {
 @Component({
   selector: 'app-boutique',
   standalone: true,
-  imports: [FormsModule,CommonModule,ReactiveFormsModule],
+  imports: [FormsModule,CommonModule,ReactiveFormsModule,Footer,Navbar,RouterModule],
   templateUrl: './boutique.html',
   styleUrl: './boutique.css',
 })

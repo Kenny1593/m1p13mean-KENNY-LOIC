@@ -29,6 +29,7 @@ export class Login {
         this.router.navigate(['/categories']);
       },
       error: (error) => {
+        alert(error.message || 'Erreur de connexion' );
         console.error("Erreur :", error);
       }
     });
