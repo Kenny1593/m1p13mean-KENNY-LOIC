@@ -2,13 +2,13 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { Navbar } from '../navbar/navbar';
+import { Navboutique } from '../navboutique/navboutique';
 import { CreateOrderService, ProduitActif } from './create-order.service';
 
 @Component({
   selector: 'app-create-order',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, Navbar],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, Navboutique],
   templateUrl: './create-order.component.html',
   styleUrls: [],
 })
