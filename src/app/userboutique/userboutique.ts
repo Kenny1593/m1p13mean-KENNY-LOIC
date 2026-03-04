@@ -40,6 +40,7 @@ export class Userboutique {
     this.authService.register(data).subscribe({
       next: (response) => {
         alert('Utilisateur enregistré avec succès !');
+        window.location.reload();
       },
       error: (error) => {
         alert('Erreur lors de l\'enregistrement de l\'utilisateur.');

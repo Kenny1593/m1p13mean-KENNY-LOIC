@@ -113,7 +113,7 @@ export class Boutique implements OnInit {
       users: this.form.value.users,
       categories: this.form.value.categories, // tableau des catégories sélectionnées
   };
-
+    console.log("Données envoyées :", data);
   this.boutiqueService.register(data)
     .subscribe({
       next: (response) => {
@@ -124,9 +124,7 @@ export class Boutique implements OnInit {
       error: (error) => {
         alert('Erreur lors de l\'ajout de la boutique.');
         console.error("Erreur :", error);
-        window.location.reload();
-
-  }
+      }
     });
 
   }
