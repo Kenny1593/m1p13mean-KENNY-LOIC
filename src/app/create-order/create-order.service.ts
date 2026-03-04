@@ -28,7 +28,7 @@ export interface CreateOrderPayload {
 
 @Injectable({ providedIn: 'root' })
 export class CreateOrderService {
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'https://m1p13mean-loic-kenny.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 

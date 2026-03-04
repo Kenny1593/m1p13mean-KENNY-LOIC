@@ -41,7 +41,7 @@ export interface ProductPage {
 @Injectable({ providedIn: 'root' })
 export class ShopService {
   //private apiUrl = `${environment.apiUrl}`;
-  private apiUrl = `http://localhost:3000/api`;
+  private apiUrl = `https://m1p13mean-loic-kenny.onrender.com/api`;
 
   // État partagé avec délai minimal pour éviter émissions immédiates
   private selectedCategorySubject = new BehaviorSubject<string>('all');

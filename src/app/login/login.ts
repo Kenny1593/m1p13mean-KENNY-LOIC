@@ -13,8 +13,8 @@ import { RouterModule } from '@angular/router';
   styleUrl: './login.css',
 })
 export class Login {
-  email: string = 'voni@gmail.com';
-  motDePasse: string = 'voni123';
+  email: string = 'admin@gmail.com';
+  motDePasse: string = 'admin2026';
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -24,7 +24,6 @@ export class Login {
       email: this.email,
       motDePasse : this.motDePasse
     };
-    alert('Connexion réussie !');
 
     this.authService.login(data).subscribe({
       next: (response) => {
@@ -46,6 +45,8 @@ export class Login {
         localStorage.setItem('boutiqueId', boutiqueId);
         this.router.navigate(['/modifboutique']);
       }
+
+      alert('Connexion réussie !');
 
     
   },

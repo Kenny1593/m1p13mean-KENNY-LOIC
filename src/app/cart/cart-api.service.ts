@@ -9,7 +9,7 @@ export interface CartItemPayload {
 
 @Injectable({ providedIn: 'root' })
 export class CartApiService {
-  private apiUrl = 'http://localhost:3000/api/cart';
+  private apiUrl = 'https://m1p13mean-loic-kenny.onrender.com/api/cart';
 
   constructor(private http: HttpClient) {}
 

@@ -26,7 +26,7 @@ export interface ApiResponse {
   providedIn: 'root',
 })
 export class UsersService {
-    private apiUrl = 'http://localhost:3000/api/users/';
+    private apiUrl = 'https://m1p13mean-loic-kenny.onrender.com/api/users/';
 
       constructor(private http: HttpClient) {}
 

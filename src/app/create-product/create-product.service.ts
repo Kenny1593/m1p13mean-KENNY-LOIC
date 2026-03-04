@@ -45,7 +45,7 @@ export interface ProduitFilters {
 
 @Injectable({ providedIn: 'root' })
 export class ProductBoutiqueService {
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'https://m1p13mean-loic-kenny.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 

@@ -20,7 +20,7 @@ interface CategorieResponse {
   providedIn: 'root',
 })
 export class CategorieService {
-  private apiUrl = 'http://localhost:3000/api/categories/';
+  private apiUrl = 'https://m1p13mean-loic-kenny.onrender.com/api/categories/';
 
   constructor(private http: HttpClient) {}
 

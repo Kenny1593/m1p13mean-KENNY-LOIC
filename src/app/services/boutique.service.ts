@@ -7,7 +7,7 @@ import { Boutique } from '../boutique/boutique';
   providedIn: 'root',
 })
 export class BoutiqueService {
-  private apiUrl = 'http://localhost:3000/api/boutiques/';
+  private apiUrl = 'https://m1p13mean-loic-kenny.onrender.com/api/boutiques/';
 
   constructor(private http: HttpClient) {}
 

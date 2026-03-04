@@ -47,7 +47,7 @@ export interface OrderFilters {
 
 @Injectable({ providedIn: 'root' })
 export class OrderBoutiqueService {
-  private apiUrl = 'http://localhost:3000/api/orders';
+  private apiUrl = 'https://m1p13mean-loic-kenny.onrender.com/api/orders';
 
   constructor(private http: HttpClient) {}
 
