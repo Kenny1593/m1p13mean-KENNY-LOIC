@@ -13,6 +13,13 @@ import { OrdersBoutiqueComponent } from './orders-boutique/orders-boutique.compo
 import { CreateOrderComponent } from './create-order/create-order.component';
 
 
+import { CreateProductComponent } from './create-product/create-product.component';
+import { ListProductComponent } from './list-product/list-product.component';
+
+
+import { DetailProductComponent } from './detail-product/detail-product.component';
+
+
 
 
 export const routes: Routes = [
@@ -28,4 +35,7 @@ export const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'orders', component: OrdersBoutiqueComponent },
   { path: 'orders/create', component: CreateOrderComponent },
+  { path: 'products/create', component: CreateProductComponent },
+  { path: 'products', component: ListProductComponent },
+  { path: 'products/:id', component: DetailProductComponent },
 ];
